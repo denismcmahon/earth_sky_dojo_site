@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="addPost" class="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <form @submit.prevent="addPost" class="max-w-lg mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <div class="mb-4">
         <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title:</label>
         <input type="text" id="title" v-model="newPost.title" required
@@ -7,13 +7,13 @@
       </div>
       <div class="mb-4">
         <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content:</label>
-        <textarea id="content" v-model="newPost.content" required
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+        <quill-editor
+            v-model:value="newPost.content"
+        />
       </div>
       <div class="mb-4">
         <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Image URL:</label>
-        <input type="text" id="image" v-model="newPost.image" required
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <input type="file" id="image" @change="handleFileUpload">
       </div>
       <div class="flex items-center justify-between">
         <button type="submit"
@@ -24,14 +24,24 @@
 
 <script>
     import axios from 'axios';
+    import { quillEditor } from 'vue3-quill';
 
     export default {
+        components: {
+            quillEditor
+        },
         data() {
             return {
                 newPost: {
                     title: '',
                     content: '',
                     image: ''
+                },
+                editorOption: {
+                    placeholder: 'core',
+                    modules: {
+
+                    }
                 }
             };
         },
@@ -45,6 +55,11 @@
                     content: '',
                     image: ''
                 }
+            },
+            handleFileUpload(event) {
+                const file = event.target.files[0];
+                console.log(file);
+                // Handle file upload (e.g., using FormData and Axios)
             }
         }
     }
