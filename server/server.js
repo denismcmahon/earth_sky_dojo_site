@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 const postRoutes = require('./routes/postRoutes');
 
 const app = express();
@@ -25,6 +26,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/posts', postRoutes);
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
