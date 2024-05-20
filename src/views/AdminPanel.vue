@@ -39,19 +39,11 @@
           modules: {
             toolbar: [
               [{ 'header': [1, 2, false] }],
-              ['bold', 'italic', 'underline'],
-              ['image', 'code-block']
+              ['bold', 'italic', 'underline']
             ]
           }
         }
       };
-    },
-    watch: {
-      '$refs.quillEditor.quill'(newVal) {
-        if (newVal) {
-          this.registerImageHandler();
-        }
-      }
     },
     methods: {
       async addPost() {
@@ -62,40 +54,6 @@
         this.newPost = {
           title: '',
           content: ''
-        };
-      },
-      registerImageHandler() {
-        this.$nextTick(() => {
-          const quill = this.$refs.quillEditor.quill;
-          if (quill) {
-            quill.getModule('toolbar').addHandler('image', this.imageHandler);
-          }
-        });
-      },
-      async imageHandler() {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.click();
-        input.onchange = async () => {
-          const file = input.files[0];
-          const formData = new FormData();
-          formData.append('image', file);
-          
-          try {
-            console.log('DM ==> trying to hit the upload endpoint');
-            const response = await axios.post('http://localhost:3000/api/posts/imageupload', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            });
-            const imageUrl = response.data.url; 
-            const quill = this.$refs.quillEditor.quill; 
-            const range = quill.getSelection(true); 
-            quill.insertEmbed(range.index, 'image', imageUrl);
-          } catch (error) {
-            console.error('Error uploading image:', error);
-          }
         };
       }
     }
